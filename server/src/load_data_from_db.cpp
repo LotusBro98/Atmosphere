@@ -4,7 +4,9 @@
 
 #include <sqlite3.h>
 #include <cstring>
-#include "include/Server.h"
+#include "../include/Server.h"
+
+using namespace server;
 
 const char * statement_movies_table = "create table movies(\n"
                                       "id integer not null constraint movies_pk primary key autoincrement,\n"
@@ -117,8 +119,8 @@ int Server::loadRooms() {
 
     if (sqlite3_exec(db, statement_get_rooms, room_row_callback, this, &errMsg)) {
         fprintf(stderr, "Cannot load rooms: %s\n", errMsg);
-        fprintf(stderr, "Creating new table 'rooms'");
-        if (sqlite3_exec(db, statement_movies_table, 0, 0, &errMsg))
+        fprintf(stderr, "Creating new table 'rooms'\n");
+        if (sqlite3_exec(db, statement_rooms_table, 0, 0, &errMsg))
         {
             fprintf(stderr, "Failed to load rooms: %s\n", errMsg);
             sqlite3_free(errMsg);
@@ -128,7 +130,7 @@ int Server::loadRooms() {
 
     if (sqlite3_exec(db, statement_get_movies_in_rooms, fill_room_row_callback, this, &errMsg)) {
         fprintf(stderr, "Cannot fill rooms with movies: %s\n", errMsg);
-        fprintf(stderr, "Creating new table 'movies_in_rooms'");
+        fprintf(stderr, "Creating new table 'movies_in_rooms'\n");
         if (sqlite3_exec(db, statement_movies_in_rooms_table, 0, 0, &errMsg))
         {
             fprintf(stderr, "Failed to fill rooms with movies: %s\n", errMsg);

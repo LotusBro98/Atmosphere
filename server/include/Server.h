@@ -1,0 +1,68 @@
+//
+// Created by alex on 08.05.19.
+//
+
+#ifndef ATMOSPHERE_SERVER_H
+#define ATMOSPHERE_SERVER_H
+
+
+#include <vlc/vlc.h>
+#include "Room.h"
+#include <list>
+
+namespace server {
+
+    class Server {
+    public:
+
+
+        void addRoom(Room *room);
+
+        void addMovie(Movie *movie);
+
+        void addUser(User *user);
+        void removeUser(User *user);
+
+        Room *getRoom(int id);
+
+        Movie *getMovie(int id);
+
+        friend std::ostream &operator<<(std::ostream &os, Server *server);
+
+        libvlc_instance_t *getVLCinst();
+
+        static Server *getServer() {
+            static Server s;
+            return &s;
+        }
+
+        bool isAlive();
+
+    private:
+        Server();
+
+        int openSocket(short port = 23443);
+        friend void *listenerFunc(void *server);
+        int main_sock;
+
+        pthread_t listener_thread;
+
+        libvlc_instance_t *vlc_inst;
+
+        std::vector<Room *> rooms;
+        std::vector<Movie *> movies;
+        std::list<User *> users;
+
+        int loadMovies();
+        int loadRooms();
+
+        void mainLoop();
+
+    };
+
+    int main(int args, char *argv[]);
+
+}
+
+
+#endif //ATMOSPHERE_SERVER_H

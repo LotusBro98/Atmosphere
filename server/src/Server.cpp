@@ -2,11 +2,14 @@
 // Created by alex on 08.05.19.
 //
 
-#include "include/Server.h"
+#include "../include/Server.h"
+
 #include <sqlite3.h>
 #include <iostream>
 #include <unistd.h>
+#include <poll.h>
 
+using namespace server;
 
 Server::Server() {
     this->vlc_inst = libvlc_new(0, NULL);
@@ -37,13 +40,13 @@ Movie *Server::getMovie(int id) {
     return nullptr;
 }
 
-std::ostream &operator<<(std::ostream &os, Server *server) {
+std::ostream& server::operator<<(std::ostream &os, Server *server) {
     os << "Rooms: \n";
-    for (Room* room : server->rooms){
+    for (Room *room : server->rooms) {
         os << room;
     }
     os << "\nMovies: \n";
-    for (Movie* movie : server->movies){
+    for (Movie *movie : server->movies) {
         os << "\t" << movie << "\n";
     }
     return os;
@@ -51,6 +54,32 @@ std::ostream &operator<<(std::ostream &os, Server *server) {
 
 libvlc_instance_t *Server::getVLCinst() {
     return vlc_inst;
+}
+
+bool Server::isAlive() {
+    return true;
+}
+
+void Server::addUser(User *user) {
+    users.push_back(user);
+}
+
+void Server::removeUser(User *user) {
+    users.remove(user);
+    close(user->getSockFD());
+    errno = 0;
+}
+
+void Server::mainLoop() {
+
+    fd_set rd;
+    fd_set wr;
+
+    while (this->isAlive())
+    {
+        FD_ZERO(&rd);
+        FD_ZERO(&wr);
+    }
 }
 
 int main(int args, char **argv) {

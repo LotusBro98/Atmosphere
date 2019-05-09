@@ -4,14 +4,16 @@
 
 #include <iostream>
 #include <cstring>
-#include "include/Movie.h"
+#include "../include/Movie.h"
+
+using namespace server;
 
 Movie::Movie(int id, char* source) {
     this->source = strdup(source);
     this->id = id;
 }
 
-std::ostream &operator<<(std::ostream &os, Movie *movie) {
+std::ostream& server::operator<<(std::ostream &os, Movie *movie) {
     std::string source(movie->source);
     os << movie->id << ": " << source;
     return os;

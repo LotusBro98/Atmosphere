@@ -2,9 +2,11 @@
 // Created by alex on 08.05.19.
 //
 
-#include "include/Room.h"
-#include "include/Server.h"
+#include "../include/Room.h"
+#include "../include/Server.h"
 #include <iostream>
+
+using namespace server;
 
 Room::Room(int id) {
     this->id = id;
@@ -16,9 +18,9 @@ void Room::addMovie(Movie *movie) {
 
 inline int Room::getId() { return id; }
 
-std::ostream &operator<<(std::ostream &os, Room *room) {
+std::ostream& server::operator<<(std::ostream &os, Room *room) {
     os << "Room " << room->getId() << ":\n";
-    for (Movie* movie : room->movies){
+    for (Movie *movie : room->movies) {
         os << "\t" << movie << "\n";
     }
     return os;
