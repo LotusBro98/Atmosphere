@@ -12,13 +12,16 @@ namespace server {
 
     class User {
     public:
-        User(int sock_fd, struct sockaddr* addr);
+        User(int sock_fd, struct sockaddr_in* addr);
 
         int getSockFD();
 
     private:
+        friend void* listenerFunc(void* user_p);
+
         int sock_fd;
-        struct sockaddr addr;
+        struct sockaddr_in addr{};
+        pthread_t thread;
     };
 
 }

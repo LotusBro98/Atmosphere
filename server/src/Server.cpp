@@ -70,23 +70,13 @@ void Server::removeUser(User *user) {
     errno = 0;
 }
 
-void Server::mainLoop() {
-
-    fd_set rd;
-    fd_set wr;
-
-    while (this->isAlive())
-    {
-        FD_ZERO(&rd);
-        FD_ZERO(&wr);
-    }
-}
-
 int main(int args, char **argv) {
     Server* server = Server::getServer();
 
     server->getRoom(1)->startStreaming(1);
     std::cout << server;
+
+    server->openSocket();
 
     sleep(20);
     server->getRoom(1)->pause();

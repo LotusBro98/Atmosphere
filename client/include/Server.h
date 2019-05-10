@@ -15,10 +15,23 @@ class Server;
 
 class Server {
 public:
-    Server(std::string &baseurl);
+    Server(std::string baseurl);
+
+    int getSockFD();
+
+    void addRoom(Room* room);
+
+    Room* getRoom(int id);
+
+    bool isConnected();
 
 private:
     std::string baseurl;
+
+    int sock_fd;
+    int openSocket(short port = 23443);
+
+    bool connected = false;
 
     std::vector<Room*> knownRooms;
 };

@@ -11,13 +11,15 @@ class Room;
 
 class Room {
 public:
-    Room(int id);
+    Room(int id, Server* server);
 
     void connectToStream();
 
     void pause();
     void resume();
     void seek(float percentage);
+
+    int getID();
 
 private:
     Server* server;

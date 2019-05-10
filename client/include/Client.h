@@ -10,6 +10,7 @@
 #include "Server.h"
 
 class Client {
+public:
 
     static Client* getClient()
     {
@@ -18,6 +19,8 @@ class Client {
     }
 
     void addServer(Server* server);
+
+    Server* getServer(int index);
 
 private:
     Client();
@@ -32,6 +35,5 @@ private:
     libvlc_instance_t* vlc_inst;
     libvlc_media_player_t* main_player;
 };
-
 
 #endif //ATMOSPHERE_CLIENT_H

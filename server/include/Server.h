@@ -38,12 +38,10 @@ namespace server {
 
         bool isAlive();
 
+        int openSocket(short port = 23443);
+
     private:
         Server();
-
-        int openSocket(short port = 23443);
-        friend void *listenerFunc(void *server);
-        int main_sock;
 
         pthread_t listener_thread;
 
@@ -55,8 +53,6 @@ namespace server {
 
         int loadMovies();
         int loadRooms();
-
-        void mainLoop();
 
     };
 
