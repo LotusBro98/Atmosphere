@@ -2,16 +2,29 @@
 // Created by alex on 10.05.19.
 //
 
+#include <cstring>
+#include <Client.h>
 #include "../include/Room.h"
 #include "../../include/Message.h"
 
 void Room::pause()
 {
-    struct Message* msg = (struct Message*) malloc(256);
+    struct MsgPause msg = {};
+    msg.room = this->id;
 
-    struct MsgPause msgPause = {1};
+    std::cout << "<- " << &msg;
 
-    sendMessage(server->getSockFD(), (struct Message*) &msgPause);
+    server->sendMessage((struct Message*) &msg);
+}
+
+void Room::play()
+{
+    struct MsgResume msg = {};
+    msg.room = this->id;
+
+    std::cout << "<- " << &msg;
+
+    server->sendMessage((struct Message*) &msg);
 }
 
 int Room::getID() {
@@ -24,3 +37,35 @@ Room::Room(int id, Server* server) {
 
     server->addRoom(this);
 }
+
+void Room::setSource(char *source) {
+    strcpy(this->source, source);
+
+    Player* player = Client::getClient()->getPlayer();
+
+    player->notifyUpdateSource();
+}
+
+char* Room::getSource() {
+    return source;
+}
+
+void Room::requestUpdateSource() {
+    char* source = "";
+    int size = 1;
+    size += (long)(((struct MsgSource*)0)->source);
+
+    struct MsgSource* msg = (struct MsgSource*) malloc(size);
+
+    msg->type = MSG_SOURCE;
+    msg->size = size;
+    msg->room = this->id;
+    strcpy(msg->source, source);
+
+    std::cout << "<- " << msg;
+
+    server->sendMessage((struct Message*) msg);
+}
+
+
+

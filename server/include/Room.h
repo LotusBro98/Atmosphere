@@ -35,12 +35,13 @@ namespace server {
 
         friend std::ostream &operator<<(std::ostream &os, Room *room);
 
+        void sendSource(User* user);
+
     private:
 
         std::vector<Movie *> movies;
         std::vector<User *> users;
 
-        char *streamUrl = "";
         Movie *currentMovie = nullptr;
 
         int id;

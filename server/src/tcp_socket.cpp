@@ -7,24 +7,43 @@
 #include <cstring>
 #include "../include/Server.h"
 #include "../../include/Message.h"
+#include "msg_handlers.h"
+
 
 using namespace server;
 
-void* server::listenerFunc(void *user_p) {
-    struct Message* msg = (struct Message*) malloc(256);
+namespace server {
 
-    User* user = (User*) user_p;
-    user->thread = pthread_self();
+    void *listenerFunc(void *user_p) {
+        struct Message *msg = (struct Message *) malloc(MAX_MSG_SIZE);
 
-    Server* server = Server::getServer();
-    server->addUser(user);
+        User *user = (User *) user_p;
+        user->thread = pthread_self();
 
-    while (server->isAlive())
-    {
-        if (recvMessage(user->sock_fd, msg))
-            break;
-        std::cout << msg;
+        Server *server = Server::getServer();
+        server->addUser(user);
+
+        while (server->isAlive()) {
+            if (user->recvMessage(msg))
+                break;
+
+            switch (msg->type)
+            {
+                case MSG_PAUSE:
+                    handleMsgPause(server, user, (struct MsgPause*)msg);
+                    break;
+                case MSG_RESUME:
+                    handleMsgResume(server, user, (struct MsgResume*)msg);
+                    break;
+                case MSG_SOURCE:
+                    handleMsgSource(server, user, (struct MsgSource*)msg);
+                    break;
+                default:
+                    std::cout << msg;
+            }
+        }
     }
+
 }
 
 int Server::openSocket(short port) {
@@ -36,6 +55,9 @@ int Server::openSocket(short port) {
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    int TRUE = 1;
+    setsockopt(main_sock, SOL_SOCKET, SO_REUSEADDR, &TRUE, sizeof(TRUE));
 
     bind(main_sock, (struct sockaddr*) &addr, sizeof(addr));
     listen(main_sock, 10);

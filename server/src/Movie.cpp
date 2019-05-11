@@ -13,10 +13,14 @@ Movie::Movie(int id, char* source) {
     this->id = id;
 }
 
-std::ostream& server::operator<<(std::ostream &os, Movie *movie) {
-    std::string source(movie->source);
-    os << movie->id << ": " << source;
-    return os;
+namespace server {
+
+    std::ostream &operator<<(std::ostream &os, Movie *movie) {
+        std::string source(movie->source);
+        os << movie->id << ": " << source;
+        return os;
+    }
+
 }
 
 char* Movie::getSource() {

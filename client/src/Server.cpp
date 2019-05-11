@@ -6,8 +6,11 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <cstring>
+#include <unistd.h>
 
 #include "../include/Server.h"
+#include "../../include/Message.h"
+#include "msg_handlers.h"
 
 Server::Server(std::string baseurl) {
     this->baseurl = baseurl;
@@ -39,6 +42,7 @@ int Server::openSocket(short port) {
     }
 
     this->sock_fd = sock;
+    pthread_mutex_init(&sock_mutex, NULL);
     return 0;
 }
 
@@ -62,4 +66,66 @@ Room* Server::getRoom(int id) {
 
 bool Server::isConnected() {
     return connected;
+}
+
+void* listenToServer(void* server_ptr) {
+    Server* server = (Server*) server_ptr;
+    struct Message* msg = (struct Message*) malloc(MAX_MSG_SIZE);
+
+    while (server->connected)
+    {
+        if (server->recvMessage(msg)) {
+            break;
+        }
+
+        switch (msg->type)
+        {
+            case MSG_SOURCE:
+                handleMsgSource(server, (struct MsgSource*) msg);
+                break;
+            case MSG_PAUSE:
+                handleMsgPause(server, (struct MsgPause*) msg);
+                break;
+            case MSG_RESUME:
+                handleMsgResume(server, (struct MsgResume*) msg);
+                break;
+            default:
+                std::cout << msg;
+                break;
+        }
+    }
+
+    return NULL;
+}
+
+void Server::listenToServerAsync() {
+    pthread_create(&thread, NULL, listenToServer, this);
+}
+
+void Server::disconnect() {
+    connected = false;
+    close(sock_fd);
+    pthread_cancel(thread);
+    pthread_join(thread, NULL);
+}
+
+Room *Server::getCurrentRoom() {
+    return getRoom(1);
+}
+
+int Server::sendMessage(struct ::Message *msg) {
+    //printf("Lock ");
+    pthread_mutex_lock(&sock_mutex);
+    //printf("Lock\n");
+    int rc = ::sendMessage(sock_fd, msg);
+    pthread_mutex_unlock(&sock_mutex);
+    //printf("Unlock\n");
+    return rc;
+}
+
+int Server::recvMessage(struct ::Message *msg) {
+    //pthread_mutex_lock(&sock_mutex);
+    int rc = ::recvMessage(sock_fd, msg);
+    //pthread_mutex_unlock(&sock_mutex);
+    return rc;
 }

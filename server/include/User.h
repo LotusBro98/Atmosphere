@@ -7,6 +7,7 @@
 
 
 #include <netinet/in.h>
+#include "../../include/Message.h"
 
 namespace server {
 
@@ -16,12 +17,16 @@ namespace server {
 
         int getSockFD();
 
+        int sendMessage(struct ::Message* msg);
+        int recvMessage(struct ::Message* msg);
+
     private:
         friend void* listenerFunc(void* user_p);
 
         int sock_fd;
         struct sockaddr_in addr{};
         pthread_t thread;
+        pthread_mutex_t mutex;
     };
 
 }

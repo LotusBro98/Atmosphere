@@ -4,7 +4,14 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 project(AtmosphereServer)
 
 set(SERVER_SOURCES
-        src/Server.cpp src/Room.cpp src/Movie.cpp src/User.cpp src/load_data_from_db.cpp src/tcp_socket.cpp ../src/Message.cpp)
+        src/Server.cpp
+        src/Room.cpp
+        src/Movie.cpp
+        src/User.cpp
+        src/load_data_from_db.cpp
+        src/tcp_socket.cpp
+        ../src/Message.cpp
+        src/msg_handlers.cpp)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(VLC REQUIRED libvlc)

@@ -8,10 +8,14 @@
 
 using namespace server;
 
-const char * statement_movies_table = "create table movies(\n"
-                                      "id integer not null constraint movies_pk primary key autoincrement,\n"
-                                      "source text not null\n"
-                                      ");";
+const char * statement_movies_table = "create table movies\n"
+                                      "(\n"
+                                      "\tid integer not null\n"
+                                      "\t\tconstraint movies_pk\n"
+                                      "\t\t\tprimary key,\n"
+                                      "\tsource text not null\n"
+                                      ");\n"
+                                      "";
 const char * statement_get_movies = "SELECT id, source FROM movies;";
 
 int movie_row_callback(void *serverPtr, int cols, char **data, char **azColName) {

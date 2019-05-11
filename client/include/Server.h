@@ -22,16 +22,29 @@ public:
     void addRoom(Room* room);
 
     Room* getRoom(int id);
+    Room* getCurrentRoom();
 
     bool isConnected();
+
+    friend void* listenToServer(void* server_ptr);
+
+    void listenToServerAsync();
+    void disconnect();
+
+    int sendMessage(struct ::Message* msg);
+    int recvMessage(struct ::Message* msg);
 
 private:
     std::string baseurl;
 
     int sock_fd;
+    pthread_mutex_t sock_mutex;
+
     int openSocket(short port = 23443);
 
     bool connected = false;
+
+    pthread_t thread;
 
     std::vector<Room*> knownRooms;
 };

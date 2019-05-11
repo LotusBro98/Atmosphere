@@ -40,6 +40,8 @@ namespace server {
 
         int openSocket(short port = 23443);
 
+        std::list<User *> getUSers();
+
     private:
         Server();
 
@@ -53,7 +55,6 @@ namespace server {
 
         int loadMovies();
         int loadRooms();
-
     };
 
     int main(int args, char *argv[]);

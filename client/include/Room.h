@@ -8,6 +8,7 @@
 class Room;
 
 #include "Server.h"
+#include "../../include/Message.h"
 
 class Room {
 public:
@@ -16,14 +17,26 @@ public:
     void connectToStream();
 
     void pause();
-    void resume();
+    void play();
     void seek(float percentage);
+
+    void requestUpdateSource();
+
+    void setSource(char* source);
+    char* getSource();
+
+    bool playing;
+    float progress;
 
     int getID();
 
 private:
     Server* server;
     int id;
+    char source[MAX_MSG_SIZE];
+
+
+
 };
 
 

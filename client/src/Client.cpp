@@ -4,19 +4,34 @@
 
 #include "../include/Client.h"
 
-void Client::addServer(Server *server) {
-    knownServers.push_back(server);
-}
-
 Client::Client() {
-    loadServers();
+    connectToServer();
+
+    player = new Player();
+    player->init(0, NULL);
 }
 
-void Client::loadServers() {
-    Server* server = new Server("127.0.0.1");
-    addServer(server);
+Server* Client::getServer() {
+    return server;
 }
 
-Server* Client::getServer(int index) {
-    return knownServers.at(index);
+void Client::connectToServer() {
+    server = new Server("127.0.0.1");
+    server->listenToServerAsync();
+}
+
+Player *Client::getPlayer() {
+    return player;
+}
+
+Client::~Client() {
+    player->destroy();
+    server->disconnect();
+
+    delete player;
+    delete server;
+}
+
+void Client::playerMain() {
+    player->start();
 }

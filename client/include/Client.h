@@ -8,6 +8,7 @@
 
 #include <vlc/vlc.h>
 #include "Server.h"
+#include "Player.h"
 
 class Client {
 public:
@@ -18,22 +19,19 @@ public:
         return &c;
     }
 
-    void addServer(Server* server);
+    Server* getServer();
+    Player* getPlayer();
 
-    Server* getServer(int index);
+    void playerMain();
 
 private:
     Client();
+    ~Client();
 
-    void loadServers();
+    void connectToServer();
 
-    std::vector<Server*> knownServers;
-
-    Server* currentServer;
-    Room* currentRoom;
-
-    libvlc_instance_t* vlc_inst;
-    libvlc_media_player_t* main_player;
+    Server* server;
+    Player* player;
 };
 
 #endif //ATMOSPHERE_CLIENT_H

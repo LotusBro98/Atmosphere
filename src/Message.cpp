@@ -18,7 +18,7 @@ int sendMessage(int fd, struct Message* msg)
     char * p = buf;
     int rc;
 
-    while ((p < end) && (rc = write(fd, p, end - p) != 0))
+    while ((p < end) && (rc = write(fd, p, end - p)) != 0)
     {
         if (errno) {
             perror("Failed to send message");
@@ -41,18 +41,24 @@ int recvMessage(int fd, struct Message* msg)
 {
     errno = 0;
 
-    if (read(fd, &msg->type, sizeof(int)) <= 0)
+    if (read(fd, &msg->type, sizeof(int)) <= 0) {
+        perror("Socket disconnected while reading msg type");
         return 1;
+    }
+    //fprintf(stderr, "Got msg type: %d\n", msg->type);
 
-    if (read(fd, &msg->size, sizeof(int)) <= 0)
+    if (read(fd, &msg->size, sizeof(int)) <= 0) {
+        perror("Socket disconnected while reading msg size");
         return 1;
+    }
+    //fprintf(stderr, "Got msg size: %d\n", msg->size);
 
     char * buf = msg->data;
     char * end = (char*)msg + msg->size;
     char * p = buf;
     int rc;
 
-    while ((p < end) && (rc = read(fd, p, end - p) != 0))
+    while ((p < end) && ((rc = read(fd, p, end - p)) != 0))
     {
         if (errno) {
             perror("Failed to recieve message");

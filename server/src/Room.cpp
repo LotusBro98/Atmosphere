@@ -4,7 +4,9 @@
 
 #include "../include/Room.h"
 #include "../include/Server.h"
+#include "../../include/Message.h"
 #include <iostream>
+#include <cstring>
 
 using namespace server;
 
@@ -45,15 +47,40 @@ void Room::startStreaming(int index) {
 }
 
 void Room::pause() {
-    libvlc_instance_t* vlc_inst = Server::getServer()->getVLCinst();
-    const char * media_name = ("room/" + std::to_string(id)).data();
+    MsgPause msg;
+    msg.room = this->id;
 
-    libvlc_vlm_pause_media(vlc_inst, media_name);
+    for (User* user : Server::getServer()->getUSers())
+    {
+        user->sendMessage((struct Message*) &msg);
+    }
 }
 
 void Room::resume() {
-    libvlc_instance_t* vlc_inst = Server::getServer()->getVLCinst();
-    const char * media_name = ("room/" + std::to_string(id)).data();
+    MsgResume msg;
+    msg.room = this->id;
 
-    libvlc_vlm_play_media(vlc_inst, media_name);
+    for (User* user : Server::getServer()->getUSers())
+    {
+        user->sendMessage((struct Message*) &msg);
+    }
+}
+
+void Room::sendSource(User *user) {
+    char* source = this->currentMovie->getSource();
+    int size = strlen(source) + 1;
+    size += (long)(((struct MsgSource*)0)->source);
+
+    struct MsgSource* msg = (struct MsgSource*) malloc(size);
+
+    msg->type = MSG_SOURCE;
+    msg->size = size;
+    msg->room = this->id;
+    strcpy(msg->source, source);
+
+    user->sendMessage((struct Message*) msg);
+}
+
+void Room::selectMovie(int index) {
+    this->currentMovie = movies.at(index);
 }

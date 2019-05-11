@@ -14,8 +14,8 @@ int main(int argc, char* argv[])
     inst = libvlc_new (0, nullptr);
 
     /* Create a new item */
-    //m = libvlc_media_new_location (inst, "https://github.com/bower-media-samples/big-buck-bunny-1080p-30s/blob/master/video.mp4?raw=true");
-    m = libvlc_media_new_path (inst, "/home/alex/Downloads/SampleVideo_1280x720_1mb.mp4");
+    m = libvlc_media_new_location (inst, "https://cs1-61v4.vkuservideo.net/p19/102d4a2d5851.720.mp4?extra=Yjbpjq9hLz43WYY3c0m2eyPcDhi0CLJKu6qjtY_-YULs5YsyG-eblCUO8sP604rHO8ylWbKzodhTYKF2jrvvWRmyvx-lGZWaIjQhRofI2Y62D_5vuxpOTkaKEHy_GwyFptCkslIyMvtlpZLdc5TVkg");
+    //m = libvlc_media_new_path (inst, "/home/alex/Downloads/SampleVideo_1280x720_1mb.mp4");
 
     /* Create a media player playing environement */
     mp = libvlc_media_player_new_from_media (m);

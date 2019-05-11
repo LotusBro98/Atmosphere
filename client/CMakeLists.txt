@@ -4,7 +4,13 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 project(AtmosphereClient)
 
 set(CLIENT_SOURCES
-        src/Client.cpp src/Server.cpp src/Room.cpp ../include/Message.h ../src/Message.cpp src/main.cpp)
+        src/Client.cpp
+        src/Server.cpp
+        src/Room.cpp
+        ../src/Message.cpp
+        src/main.cpp
+        src/Player.cpp
+        src/msg_handlers.cpp)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK REQUIRED gtk+-3.0)
@@ -15,4 +21,4 @@ include_directories(AtmosphereClient include ${SQLITE_INCLUDE_DIRS} ${GTK_INCLUD
 
 add_executable(AtmosphereClient ${CLIENT_SOURCES})
 
-target_link_libraries(AtmosphereClient ${GTK_LIBRARIES} ${VLC_LIBRARIES} ${SQLITE_LIBRARIES})
+target_link_libraries(AtmosphereClient ${GTK_LIBRARIES} ${VLC_LIBRARIES} ${SQLITE_LIBRARIES} pthread)
