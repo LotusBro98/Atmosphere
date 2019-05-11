@@ -13,6 +13,8 @@ User::User(int sock_fd, struct sockaddr_in *addr) {
     this->addr = *addr;
     this->thread = thread;
     pthread_mutex_init(&mutex, NULL);
+
+    this->currentRoom = NULL;
 }
 
 int User::getSockFD() {
@@ -35,4 +37,15 @@ int User::recvMessage(struct ::Message *msg) {
     int rc = ::recvMessage(sock_fd, msg);
     //pthread_mutex_unlock(&mutex);
     return rc;
+}
+
+Room *User::getCurrentRoom() {
+    return currentRoom;
+}
+
+void User::setCurrentRoom(Room* room) {
+    if (currentRoom != NULL)
+        currentRoom->removeUser(this);
+    currentRoom = room;
+    room->addUser(this);
 }

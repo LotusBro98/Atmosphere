@@ -81,19 +81,32 @@ void* listenToServer(void* server_ptr) {
         switch (msg->type)
         {
             case MSG_SOURCE:
+                std::cout << "=> " << (struct MsgSource*) msg;
                 handleMsgSource(server, (struct MsgSource*) msg);
                 break;
             case MSG_PAUSE:
+                std::cout << "=> " << (struct MsgPause*) msg;
                 handleMsgPause(server, (struct MsgPause*) msg);
                 break;
             case MSG_RESUME:
+                std::cout << "=> " << (struct MsgResume*) msg;
                 handleMsgResume(server, (struct MsgResume*) msg);
                 break;
+            case MSG_SEEK:
+                std::cout << "=> " << (struct MsgSeek*) msg;
+                handleMsgSeek(server, (struct MsgSeek*) msg);
+                break;
+            case MSG_LIST_ROOMS:
+                std::cout << "=> " << (struct MsgListRooms*) msg;
+                handleMsgListRooms(server, (struct MsgListRooms*) msg);
+                break;
             default:
-                std::cout << msg;
+                std::cout << "=> " << msg;
                 break;
         }
     }
+
+    free(msg);
 
     return NULL;
 }
@@ -128,4 +141,35 @@ int Server::recvMessage(struct ::Message *msg) {
     int rc = ::recvMessage(sock_fd, msg);
     //pthread_mutex_unlock(&sock_mutex);
     return rc;
+}
+
+void Server::clearRooms() {
+    knownRooms.clear();
+}
+
+void Server::updateRooms() {
+    int size = (long)(((struct MsgListRooms*)0)->ids);
+    MsgListRooms* msg = (struct MsgListRooms*) malloc(size);
+
+    msg->type = MSG_LIST_ROOMS;
+    msg->size = size;
+
+    std::cout << "<- " << msg;
+
+    sendMessage((struct Message*) msg);
+    free(msg);
+}
+
+std::list<Room *> Server::getRooms() {
+    return knownRooms;
+}
+
+void Server::selectRoom(Room* room) {
+    MsgSetRoom msg;
+
+    msg.room = room->getID();
+
+    std::cout << "<- " << &msg;
+
+    sendMessage((struct Message*) &msg);
 }

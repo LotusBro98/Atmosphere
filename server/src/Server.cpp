@@ -70,30 +70,10 @@ void Server::removeUser(User *user) {
     errno = 0;
 }
 
-std::list<User *> Server::getUSers() {
+std::list<User *>& Server::getUsers() {
     return users;
 }
 
-int main(int args, char **argv) {
-    Server* server = Server::getServer();
-
-    std::cout << server;
-
-    //server->getRoom(1)->startStreaming(1);
-
-    server->getRoom(1)->selectMovie(1);
-
-    server->openSocket();
-
-    /*
-    sleep(20);
-    server->getRoom(1)->pause();
-    std::cout << "Paused\n";
-    sleep(3);
-    server->getRoom(1)->resume();
-    std::cout << "Resumed\n";
-    */
-    sleep(100);
-
-    return 0;
+std::list<Room *>& Server::getRooms() {
+    return rooms;
 }

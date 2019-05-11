@@ -3,8 +3,6 @@
 //
 
 #include "../include/Room.h"
-#include "../include/Server.h"
-#include "../../include/Message.h"
 #include <iostream>
 #include <cstring>
 
@@ -18,8 +16,6 @@ void Room::addMovie(Movie *movie) {
     movies.push_back(movie);
 }
 
-inline int Room::getId() { return id; }
-
 std::ostream& server::operator<<(std::ostream &os, Room *room) {
     os << "Room " << room->getId() << ":\n";
     for (Movie *movie : room->movies) {
@@ -28,6 +24,7 @@ std::ostream& server::operator<<(std::ostream &os, Room *room) {
     return os;
 }
 
+/*
 void Room::startStreaming(Movie *movie) {
     libvlc_instance_t* vlc_inst = Server::getServer()->getVLCinst();
     const char * media_name = ("room/" + std::to_string(id)).data();
@@ -45,12 +42,13 @@ void Room::startStreaming(int index) {
     Movie* movie = movies.at(index);
     startStreaming(movie);
 }
+ */
 
 void Room::pause() {
     MsgPause msg;
     msg.room = this->id;
 
-    for (User* user : Server::getServer()->getUSers())
+    for (User* user : users)
     {
         user->sendMessage((struct Message*) &msg);
     }
@@ -60,7 +58,7 @@ void Room::resume() {
     MsgResume msg;
     msg.room = this->id;
 
-    for (User* user : Server::getServer()->getUSers())
+    for (User* user : users)
     {
         user->sendMessage((struct Message*) &msg);
     }
@@ -79,8 +77,29 @@ void Room::sendSource(User *user) {
     strcpy(msg->source, source);
 
     user->sendMessage((struct Message*) msg);
+
+    free(msg);
 }
 
 void Room::selectMovie(int index) {
-    this->currentMovie = movies.at(index);
+    this->currentMovie = movies.back();
+}
+
+void Room::seek(float progress) {
+    MsgSeek msg;
+    msg.room = this->id;
+    msg.percentage = progress;
+
+    for (User* user : users)
+    {
+        user->sendMessage((struct Message*) &msg);
+    }
+}
+
+void Room::addUser(User *user) {
+    users.push_back(user);
+}
+
+void Room::removeUser(User *user) {
+    users.remove(user);
 }

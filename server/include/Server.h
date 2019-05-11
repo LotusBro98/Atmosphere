@@ -40,7 +40,8 @@ namespace server {
 
         int openSocket(short port = 23443);
 
-        std::list<User *> getUSers();
+        std::list<User *>& getUsers();
+        std::list<Room *>& getRooms();
 
     private:
         Server();
@@ -49,8 +50,8 @@ namespace server {
 
         libvlc_instance_t *vlc_inst;
 
-        std::vector<Room *> rooms;
-        std::vector<Movie *> movies;
+        std::list<Room *> rooms;
+        std::list<Movie *> movies;
         std::list<User *> users;
 
         int loadMovies();

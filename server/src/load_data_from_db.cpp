@@ -106,6 +106,7 @@ int fill_room_row_callback(void *serverPtr, int cols, char **data, char **azColN
     }
 
     room->addMovie(movie);
+    room->selectMovie(0);
 
     return 0;
 }

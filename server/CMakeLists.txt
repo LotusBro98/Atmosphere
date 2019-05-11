@@ -11,7 +11,8 @@ set(SERVER_SOURCES
         src/load_data_from_db.cpp
         src/tcp_socket.cpp
         ../src/Message.cpp
-        src/msg_handlers.cpp)
+        src/msg_handlers.cpp
+        src/main.cpp)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(VLC REQUIRED libvlc)

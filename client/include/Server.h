@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <list>
 
 class Server;
 
@@ -20,9 +21,13 @@ public:
     int getSockFD();
 
     void addRoom(Room* room);
+    void clearRooms();
+    std::list<Room* > getRooms();
 
     Room* getRoom(int id);
     Room* getCurrentRoom();
+
+    void selectRoom(Room* room);
 
     bool isConnected();
 
@@ -33,6 +38,8 @@ public:
 
     int sendMessage(struct ::Message* msg);
     int recvMessage(struct ::Message* msg);
+
+    void updateRooms();
 
 private:
     std::string baseurl;
@@ -46,7 +53,7 @@ private:
 
     pthread_t thread;
 
-    std::vector<Room*> knownRooms;
+    std::list<Room*> knownRooms;
 };
 
 

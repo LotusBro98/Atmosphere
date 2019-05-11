@@ -27,7 +27,7 @@ int recvMessage(int fd, struct Message* msg);
 
 enum MSG_TYPES
 {
-    MSG_PAUSE, MSG_RESUME, MSG_SEEK, MSG_SOURCE, MSG_ROOMS
+    MSG_PAUSE, MSG_RESUME, MSG_SEEK, MSG_SOURCE, MSG_LIST_ROOMS, MSG_SET_ROOM
 };
 
 struct MsgPause
@@ -65,6 +65,12 @@ struct MsgSeek
 
 };
 
+inline std::ostream& operator<< (std::ostream& os, struct MsgSeek* msg)
+{
+    os << "MsgSeek: " << msg->room << "; " << msg->percentage << "\n";
+    return os;
+}
+
 struct MsgSource
 {
     int type = MSG_SEEK;
@@ -79,9 +85,40 @@ inline std::ostream& operator<< (std::ostream& os, struct MsgSource* msg)
     return os;
 }
 
-struct MsgRooms
+struct MsgListRooms
 {
-    int type = MSG_ROOMS;
+    int type = MSG_LIST_ROOMS;
+    int size;
+    int ids[];
 };
+
+inline std::ostream& operator<< (std::ostream& os, struct MsgListRooms* msg)
+{
+    int n_rooms = (msg->size - (long)(((struct MsgListRooms*)0)->ids)) / sizeof(int);
+
+    os << "MsgListRooms: [ ";
+
+    for (int i = 0; i < n_rooms; i++)
+    {
+        os << msg->ids[i] << " ";
+    }
+
+    os << "]\n";
+
+    return os;
+}
+
+struct MsgSetRoom
+{
+    int type = MSG_SET_ROOM;
+    int size = sizeof(struct MsgSetRoom);
+    int room;
+};
+
+inline std::ostream& operator<< (std::ostream& os, struct MsgSetRoom* msg)
+{
+    os << "MsgSetRoom: " << msg->room << "\n";
+    return os;
+}
 
 #endif //ATMOSPHERE_MESSAGE_H

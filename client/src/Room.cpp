@@ -34,8 +34,6 @@ int Room::getID() {
 Room::Room(int id, Server* server) {
     this->id = id;
     this->server = server;
-
-    server->addRoom(this);
 }
 
 void Room::setSource(char *source) {
@@ -65,6 +63,18 @@ void Room::requestUpdateSource() {
     std::cout << "<- " << msg;
 
     server->sendMessage((struct Message*) msg);
+
+    free(msg);
+}
+
+void Room::seek(float percentage) {
+    struct MsgSeek msg = {};
+    msg.room = this->id;
+    msg.percentage = percentage;
+
+    std::cout << "<- " << &msg;
+
+    server->sendMessage((struct Message*) &msg);
 }
 
 

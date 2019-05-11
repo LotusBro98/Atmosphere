@@ -5,9 +5,13 @@
 #ifndef ATMOSPHERESERVER_USER_H
 #define ATMOSPHERESERVER_USER_H
 
+namespace server {
+    class User;
+}
 
 #include <netinet/in.h>
 #include "../../include/Message.h"
+#include "Room.h"
 
 namespace server {
 
@@ -20,6 +24,9 @@ namespace server {
         int sendMessage(struct ::Message* msg);
         int recvMessage(struct ::Message* msg);
 
+        Room* getCurrentRoom();
+        void setCurrentRoom(Room* room);
+
     private:
         friend void* listenerFunc(void* user_p);
 
@@ -27,6 +34,8 @@ namespace server {
         struct sockaddr_in addr{};
         pthread_t thread;
         pthread_mutex_t mutex;
+
+        Room* currentRoom;
     };
 
 }

@@ -18,8 +18,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    new Room(1, server);
-    Room* room = server->getRoom(1);
+    server->updateRooms();
 
     client->playerMain();
     server->disconnect();

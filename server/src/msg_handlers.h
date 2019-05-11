@@ -16,6 +16,12 @@ namespace server {
 
     int handleMsgSource(Server *server, User *user, struct MsgSource *msg);
 
+    int handleMsgSeek(Server *server, User *user, struct MsgSeek *msg);
+
+    int handleMsgListRooms(Server *server, User *user, struct MsgListRooms *msg);
+
+    int handleMsgSetRoom(Server *server, User *user, struct MsgSetRoom *msg);
+
 }
 
 #endif //ATMOSPHERE_MSG_HANDLERS_H

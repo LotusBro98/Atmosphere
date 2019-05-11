@@ -30,18 +30,35 @@ namespace server {
             switch (msg->type)
             {
                 case MSG_PAUSE:
+                    std::cout << (struct MsgPause*)msg;
                     handleMsgPause(server, user, (struct MsgPause*)msg);
                     break;
                 case MSG_RESUME:
+                    std::cout << (struct MsgResume*)msg;
                     handleMsgResume(server, user, (struct MsgResume*)msg);
                     break;
                 case MSG_SOURCE:
+                    std::cout << (struct MsgSource*)msg;
                     handleMsgSource(server, user, (struct MsgSource*)msg);
+                    break;
+                case MSG_SEEK:
+                    std::cout << (struct MsgSeek*)msg;
+                    handleMsgSeek(server, user, (struct MsgSeek*)msg);
+                    break;
+                case MSG_LIST_ROOMS:
+                    std::cout << (struct MsgListRooms*)msg;
+                    handleMsgListRooms(server, user, (struct MsgListRooms*)msg);
+                    break;
+                case MSG_SET_ROOM:
+                    std::cout << (struct MsgSetRoom*)msg;
+                    handleMsgSetRoom(server, user, (struct MsgSetRoom*)msg);
                     break;
                 default:
                     std::cout << msg;
             }
         }
+
+        free(msg);
     }
 
 }

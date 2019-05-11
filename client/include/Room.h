@@ -7,8 +7,9 @@
 
 class Room;
 
-#include "Server.h"
 #include "../../include/Message.h"
+#include "Server.h"
+
 
 class Room {
 public:

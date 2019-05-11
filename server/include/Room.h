@@ -5,10 +5,15 @@
 #ifndef ATMOSPHERESERVER_ROOM_H
 #define ATMOSPHERESERVER_ROOM_H
 
+namespace server {
+    class Room;
+}
 
 #include <vector>
 #include "Movie.h"
 #include "User.h"
+
+#include <list>
 
 #include <vlc/vlc.h>
 
@@ -21,17 +26,19 @@ namespace server {
 
         void addMovie(Movie *movie);
 
+        void addUser(User* user);
+        void removeUser(User* user);
+
         void selectMovie(int index);
 
-        void startStreaming(Movie *movie);
-
-        void startStreaming(int index = 0);
+        //void startStreaming(Movie *movie);
+        //void startStreaming(int index = 0);
 
         void pause();
-
         void resume();
+        void seek(float progress);
 
-        inline int getId();
+        inline int getId() { return id;}
 
         friend std::ostream &operator<<(std::ostream &os, Room *room);
 
@@ -39,10 +46,10 @@ namespace server {
 
     private:
 
-        std::vector<Movie *> movies;
-        std::vector<User *> users;
+        std::list<Movie *> movies;
+        std::list<User *> users;
 
-        Movie *currentMovie = nullptr;
+        Movie *currentMovie = NULL;
 
         int id;
     };

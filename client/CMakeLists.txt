@@ -10,7 +10,7 @@ set(CLIENT_SOURCES
         ../src/Message.cpp
         src/main.cpp
         src/Player.cpp
-        src/msg_handlers.cpp)
+        src/msg_handlers.cpp src/Player_GUI.cpp)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK REQUIRED gtk+-3.0)
