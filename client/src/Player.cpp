@@ -91,6 +91,9 @@ bool Player::checkWrongState()
     Room* room = Client::getClient()->getServer()->getCurrentRoom();
     libvlc_state_t state = libvlc_media_player_get_state(media_player);
 
+    if (state == 1 || state == 2)
+        return false;
+
     if (room == NULL)
         return false;
 
@@ -142,7 +145,7 @@ void Player::seek(float progress) {
     printf("%f\n", progress);
 
     if (progress == -1)
-        progress = 1;
+        return;
 
     libvlc_media_player_set_time(media_player, progress);
     printf("%ld\n", libvlc_media_player_get_time(media_player));
@@ -159,22 +162,30 @@ Player::Player() {
 
 void Player::start() {
     alive = True;
+    int check_cnt = 0;
+    int check_period = 1000;
+
     while (alive) {
         if (!gtk_main_iteration_do(false))
             break;
 
+        usleep(1000);
         lock();
         if (sourceChanged) {
             updateSource();
         }
 
-        if (!playStateChanged && checkWrongState())
+        check_cnt++;
+        check_cnt %= check_period;
+        if ((check_cnt == 0) && !playStateChanged && checkWrongState()) {
             playStateChanged = true;
+        }
+
+
         if (playStateChanged) {
             updatePlayState();
         }
         unlock();
-        usleep(1000);
 
         //libvlc_state_t state = libvlc_media_player_get_state(media_player);
         //printf("=== %d ===\n", state);
