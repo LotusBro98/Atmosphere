@@ -78,11 +78,12 @@ void Room::seek(float percentage) {
 }
 
 void Room::requestUpdateMovies() {
-    int size = (long)(((struct MsgListRooms*)0)->ids);
-    MsgListRooms* msg = (struct MsgListRooms*) malloc(size);
+    int size = (long)(((struct MsgListMovies*)0)->ids);
+    MsgListMovies* msg = (struct MsgListMovies*) malloc(size);
 
-    msg->type = MSG_LIST_ROOMS;
+    msg->type = MSG_LIST_MOVIES;
     msg->size = size;
+    msg->room = this->getID();
 
     std::cout << "<- " << msg;
 

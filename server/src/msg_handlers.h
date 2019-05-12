@@ -22,6 +22,8 @@ namespace server {
 
     int handleMsgSetRoom(Server *server, User *user, struct MsgSetRoom *msg);
 
+    int handleMsgListRooms(Server *server, User *user, struct MsgListRooms *msg);
+
 }
 
 #endif //ATMOSPHERE_MSG_HANDLERS_H

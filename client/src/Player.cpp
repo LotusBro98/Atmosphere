@@ -60,8 +60,10 @@ void Player::updatePlayState() {
     printf("state = %d\n", state);
     if (state == 1 || state == 2)
         return;
-    if (state == 5)
+    if (state == 5) {
         play();
+        room->pause();
+    }
     if (state == 7)
     {
         fprintf(stderr, "Player Error!");
@@ -70,9 +72,8 @@ void Player::updatePlayState() {
     }
     if (state == 6)
     {
-        //libvlc_media_player_stop(media_player);
-        //room->seek(0);
-        //room->pause();
+        libvlc_media_player_stop(media_player);
+        room->seek(1000);
         printf("Konets :)\n");
     }
 
@@ -104,12 +105,6 @@ bool Player::checkWrongState()
 
     if (!room->playing && state != libvlc_Paused)
         return true;
-
-    if (room->playing && state == 6)
-    {
-        room->seek(0);
-        return true;
-    }
 
     return false;
 }
