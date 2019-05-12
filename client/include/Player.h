@@ -91,6 +91,8 @@ private:
     bool playStateChanged;
     void updatePlayState();
 
+    bool checkWrongState();
+
     void open_media(const char* uri);
 
     pthread_mutex_t mutex;

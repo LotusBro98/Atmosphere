@@ -9,6 +9,7 @@ class Room;
 
 #include "../../include/Message.h"
 #include "Server.h"
+#include "Movie.h"
 
 
 class Room {
@@ -22,6 +23,7 @@ public:
     void seek(float percentage);
 
     void requestUpdateSource();
+    void requestUpdateMovies();
 
     void setSource(char* source);
     char* getSource();
@@ -36,8 +38,8 @@ private:
     int id;
     char source[MAX_MSG_SIZE];
 
-
-
+    std::list<Movie*> movies;
+    Movie* currentMovie;
 };
 
 

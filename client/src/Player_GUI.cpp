@@ -117,8 +117,16 @@ void Player::init(int argc, char* argv[]) {
 
     gtk_box_pack_end(GTK_BOX(right_box), show_playlist_button, FALSE, FALSE, 0);
 
+
+
     //setup vlc
-    vlc_inst = libvlc_new(argc, argv);
+    char* argv_vlc[] = {
+            "",
+            "--no-xlib"
+    };
+    int argc_vlc = sizeof(argv_vlc) / sizeof(char*);
+
+    vlc_inst = libvlc_new(0, NULL);
     media_player = libvlc_media_player_new(vlc_inst);
 
     g_signal_connect(G_OBJECT(player_widget), "realize", G_CALLBACK(player_widget_on_realize), this);

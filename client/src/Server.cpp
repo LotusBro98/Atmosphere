@@ -31,7 +31,7 @@ int Server::openSocket(short port) {
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     //addr.sin_addr.s_addr = inet_aton(this->baseurl.data(), &addr.sin_addr);
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    addr.sin_addr.s_addr = inet_addr(baseurl.data());
 
     connect(sock, (struct sockaddr*) &addr, sizeof(addr));
 

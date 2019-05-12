@@ -27,7 +27,7 @@ int recvMessage(int fd, struct Message* msg);
 
 enum MSG_TYPES
 {
-    MSG_PAUSE, MSG_RESUME, MSG_SEEK, MSG_SOURCE, MSG_LIST_ROOMS, MSG_SET_ROOM
+    MSG_PAUSE, MSG_RESUME, MSG_SEEK, MSG_SOURCE, MSG_LIST_ROOMS, MSG_SET_ROOM, MSG_LIST_MOVIES
 };
 
 struct MsgPause
@@ -118,6 +118,34 @@ struct MsgSetRoom
 inline std::ostream& operator<< (std::ostream& os, struct MsgSetRoom* msg)
 {
     os << "MsgSetRoom: " << msg->room << "\n";
+    return os;
+}
+
+
+
+
+struct MsgListMovies
+{
+    int type = MSG_LIST_MOVIES;
+    int size;
+    int room;
+    int selected;
+    int ids[];
+};
+
+inline std::ostream& operator<< (std::ostream& os, struct MsgListMovies* msg)
+{
+    int n_movies = (msg->size - (long)(((struct MsgListMovies*)0)->ids)) / sizeof(int);
+
+    os << "MsgListMovies: room: " << msg->room << "; movies: [ ";
+
+    for (int i = 0; i < n_movies; i++)
+    {
+        os << msg->ids[i] << " ";
+    }
+
+    os << "]\n";
+
     return os;
 }
 

@@ -77,5 +77,18 @@ void Room::seek(float percentage) {
     server->sendMessage((struct Message*) &msg);
 }
 
+void Room::requestUpdateMovies() {
+    int size = (long)(((struct MsgListRooms*)0)->ids);
+    MsgListRooms* msg = (struct MsgListRooms*) malloc(size);
+
+    msg->type = MSG_LIST_ROOMS;
+    msg->size = size;
+
+    std::cout << "<- " << msg;
+
+    server->sendMessage((struct Message*) msg);
+    free(msg);
+}
+
 
 

@@ -21,7 +21,8 @@ void on_playpause(GtkWidget *widget, gpointer data) {
     Room* room = Client::getClient()->getServer()->getCurrentRoom();
     float progress = libvlc_media_player_get_time(player->media_player);
 
-    if(libvlc_media_player_is_playing(player->media_player) == 1) {
+    //if(libvlc_media_player_is_playing(player->media_player) == 1) {
+    if(room->playing) {
         room->pause();
         room->seek(progress);
     }
@@ -57,21 +58,49 @@ void Player::updatePlayState() {
 
     libvlc_state_t state = libvlc_media_player_get_state(media_player);
     printf("state = %d\n", state);
-    if (state == 1 || state == 0)
+    if (state == 1 || state == 2)
         return;
-
-
+    if (state == 5)
+        play();
+    if (state == 7)
+    {
+        fprintf(stderr, "Player Error!");
+        playStateChanged = false;
+        return;
+    }
+    if (state == 6)
+    {
+        //libvlc_media_player_stop(media_player);
+        printf("Konets :)\n");
+    }
 
     bool playing = room->playing;
     float progress = room->progress;
-
-    seek(progress);
 
     if (playing)
         play();
     else
         pause_player();
-    playStateChanged = false;
+
+    seek(progress);
+    //playStateChanged = false;
+}
+
+bool Player::checkWrongState()
+{
+    Room* room = Client::getClient()->getServer()->getCurrentRoom();
+    libvlc_state_t state = libvlc_media_player_get_state(media_player);
+
+    if (room == NULL)
+        return false;
+
+    if (room->playing && state != libvlc_Playing)
+        return true;
+
+    if (!room->playing && state != libvlc_Paused)
+        return true;
+
+    return false;
 }
 
 void Player::open_media(const char* uri) {
@@ -84,23 +113,36 @@ void Player::open_media(const char* uri) {
     play();
     libvlc_media_release(media);
 
-
-
     //pause_player();
 }
 
 void Player::play(void) {
+    libvlc_state_t state = libvlc_media_player_get_state(media_player);
     libvlc_media_player_play(media_player);
+    fprintf(stderr, "Playing!!!! >_< %d\n", state);
     //gtk_button_set_label(GTK_BUTTON(playpause_button), "gtk-media-pause");
+    state = libvlc_media_player_get_state(media_player);
+    if (state == libvlc_Playing)
+        playStateChanged = false;
+    fprintf(stderr, "state %d\n", state);
 }
 
 void Player::pause_player(void) {
-    libvlc_media_player_pause(media_player);
+    libvlc_state_t state = libvlc_media_player_get_state(media_player);
+    fprintf(stderr, "Pausing!!!! >_< %d\n", state);
+    libvlc_media_player_set_pause(media_player, 1);
     //gtk_button_set_label(GTK_BUTTON(playpause_button), "gtk-media-play");
+    state = libvlc_media_player_get_state(media_player);
+    if (state == libvlc_Paused || state == libvlc_Ended)
+        playStateChanged = false;
+    fprintf(stderr, "state %d\n", state);
 }
 
 void Player::seek(float progress) {
     printf("%f\n", progress);
+
+    if (progress == -1)
+        progress = 1;
 
     libvlc_media_player_set_time(media_player, progress);
     printf("%ld\n", libvlc_media_player_get_time(media_player));
@@ -126,11 +168,16 @@ void Player::start() {
             updateSource();
         }
 
+        if (!playStateChanged && checkWrongState())
+            playStateChanged = true;
         if (playStateChanged) {
             updatePlayState();
         }
         unlock();
         usleep(1000);
+
+        //libvlc_state_t state = libvlc_media_player_get_state(media_player);
+        //printf("=== %d ===\n", state);
     }
     gtk_main_quit();
     gtk_main_quit();
