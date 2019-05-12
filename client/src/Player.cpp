@@ -91,12 +91,12 @@ void Player::open_media(const char* uri) {
 
 void Player::play(void) {
     libvlc_media_player_play(media_player);
-    gtk_button_set_label(GTK_BUTTON(playpause_button), "gtk-media-pause");
+    //gtk_button_set_label(GTK_BUTTON(playpause_button), "gtk-media-pause");
 }
 
 void Player::pause_player(void) {
     libvlc_media_player_pause(media_player);
-    gtk_button_set_label(GTK_BUTTON(playpause_button), "gtk-media-play");
+    //gtk_button_set_label(GTK_BUTTON(playpause_button), "gtk-media-play");
 }
 
 void Player::seek(float progress) {
@@ -130,7 +130,7 @@ void Player::start() {
             updatePlayState();
         }
         unlock();
-        usleep(1000);
+        //usleep(1000);
     }
     gtk_main_quit();
     gtk_main_quit();

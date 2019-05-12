@@ -11,6 +11,7 @@ using namespace server;
 
 Room::Room(int id) {
     this->id = id;
+    this->playing = false;
 }
 
 void Room::addMovie(Movie *movie) {

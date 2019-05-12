@@ -32,10 +32,10 @@ public:
     friend void destroy_cb(GtkWidget *widget, gpointer data);
     friend void player_widget_on_realize(GtkWidget *widget, gpointer data);
     friend void on_playpause(GtkWidget *widget, gpointer data);
-    friend void on_stop(GtkWidget *widget, gpointer data);
-    friend void on_connect(GtkWidget *widget, gpointer data);
 
     friend void on_room_pick(GtkWidget *widget, gpointer data);
+    friend void on_show_rooms(GtkWidget *widget, gpointer data);
+    friend void on_show_playlist(GtkWidget *widget, gpointer data);
 
 
     void notifyUpdateSource();
@@ -46,6 +46,9 @@ public:
 
     void clearLeftList();
     void fillRoomsList();
+
+    void clearRightList();
+    void fillPlayList();
 
 private:
 
@@ -64,20 +67,19 @@ private:
             *room_hbox,
 
             *button_hbox,
-            *playpause_button,
 
             *left_revealer,
             *list_left,
+            *left_box,
+            *show_rooms_button,
 
             *right_revealer,
             *list_right,
-
-            *show_rooms_button,
-            *hide_left_button,
-            *left_box,
-            *playpause_box,
             *right_box,
+            *show_playlist_button,
 
+            *playpause_box,
+            *playpause_button,
 
             *player_widget;
 
