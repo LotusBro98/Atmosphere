@@ -58,7 +58,7 @@ void Player::init(int argc, char* argv[]) {
     main_vbox = gtk_vbox_new(FALSE, 0);
     gtk_container_add(GTK_CONTAINER(window), main_vbox);
 
-    room_hbox = gtk_hbox_new(FALSE, 5);
+    room_hbox = gtk_hbox_new(FALSE, 10);
     gtk_box_pack_start(GTK_BOX(main_vbox), room_hbox, TRUE, TRUE, 0);
 
     player_widget = gtk_drawing_area_new();
@@ -82,8 +82,8 @@ void Player::init(int argc, char* argv[]) {
     gtk_box_pack_end(GTK_BOX(room_hbox), right_revealer, FALSE, FALSE, 0);
 
     //setup bottom controls
-    button_hbox = gtk_hbutton_box_new();
-    gtk_box_pack_end(GTK_BOX(main_vbox), button_hbox, FALSE, FALSE, 5);
+    button_hbox = gtk_hbox_new(FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(main_vbox), button_hbox, FALSE, FALSE, 10);
 
     //setup buttons
     //playpause_button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
@@ -101,22 +101,21 @@ void Player::init(int argc, char* argv[]) {
 
     left_box = gtk_hbutton_box_new();
     gtk_button_box_set_layout(GTK_BUTTON_BOX(left_box), GTK_BUTTONBOX_CENTER);
-    gtk_box_pack_start(GTK_BOX(button_hbox), left_box, TRUE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(button_hbox), left_box, TRUE, FALSE, 0);
 
     playpause_box = gtk_hbutton_box_new();
     gtk_button_box_set_layout(GTK_BUTTON_BOX(playpause_box), GTK_BUTTONBOX_CENTER);
-    gtk_box_pack_start(GTK_BOX(button_hbox), playpause_box, TRUE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(button_hbox), playpause_box, TRUE, FALSE, 0);
 
     right_box = gtk_hbutton_box_new();
     gtk_button_box_set_layout(GTK_BUTTON_BOX(right_box), GTK_BUTTONBOX_CENTER);
-    gtk_box_pack_end(GTK_BOX(button_hbox), right_box, TRUE, FALSE, 5);
+    gtk_box_pack_end(GTK_BOX(button_hbox), right_box, TRUE, FALSE, 0);
 
-    gtk_box_pack_start(GTK_BOX(playpause_box), playpause_button, FALSE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(playpause_box), playpause_button, FALSE, FALSE, 0);
 
-    gtk_box_pack_start(GTK_BOX(left_box), show_rooms_button, FALSE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(left_box), show_rooms_button, FALSE, FALSE, 0);
 
-    gtk_box_pack_end(GTK_BOX(right_box), show_playlist_button, FALSE, FALSE, 5);
-
+    gtk_box_pack_end(GTK_BOX(right_box), show_playlist_button, FALSE, FALSE, 0);
 
     //setup vlc
     vlc_inst = libvlc_new(argc, argv);
@@ -149,7 +148,7 @@ void Player::fillRoomsList() {
     {
         GtkWidget* entry = gtk_hbutton_box_new();
         gtk_button_box_set_layout(GTK_BUTTON_BOX(entry), GTK_BUTTONBOX_CENTER);
-        gtk_widget_set_size_request(entry, 100, 50);
+        gtk_widget_set_size_request(entry, 160, 72);
 
         std::string text = std::to_string(room->getID());
 
@@ -194,13 +193,13 @@ void Player::fillPlayList() {
     {
         GtkWidget* entry = gtk_hbutton_box_new();
         gtk_button_box_set_layout(GTK_BUTTON_BOX(entry), GTK_BUTTONBOX_CENTER);
-        gtk_widget_set_size_request(entry, 100, 50);
+        gtk_widget_set_size_request(entry, 160, 72);
 
         std::string text = std::to_string(room->getID());
 
         GtkWidget* label = gtk_label_new(text.data());
 
-        GtkWidget* button = gtk_button_new_from_icon_name("list-add", GTK_ICON_SIZE_BUTTON);
+        GtkWidget* button = gtk_button_new_from_icon_name("media-playback-start", GTK_ICON_SIZE_BUTTON);
         gtk_widget_set_size_request(button, 30, 30);
 
         gtk_box_pack_start(GTK_BOX(entry), button, FALSE, FALSE, 0);

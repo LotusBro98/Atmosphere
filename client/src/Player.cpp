@@ -130,7 +130,7 @@ void Player::start() {
             updatePlayState();
         }
         unlock();
-        //usleep(1000);
+        usleep(1000);
     }
     gtk_main_quit();
     gtk_main_quit();

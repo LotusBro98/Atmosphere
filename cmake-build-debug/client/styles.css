@@ -1,3 +1,41 @@
-.boxses {
-    background: red;
+GtkButton {
+    padding: 7px 16px 8px;
+    margin: 0;
+    font-size: 12.5px;
+    display: inline-block;
+    zoom: 1;
+    cursor: pointer;
+    white-space: nowrap;
+    outline: none;
+    font-family: -apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;
+    vertical-align: top;
+    line-height: 15px;
+    text-align: center;
+    text-decoration: none;
+    background: none;
+    background-color: #5181b8;
+    color: #fff;
+    border: 0;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+GtkButton:hover {
+    background-color: cornflowerblue;
+}
+
+GtkButton:active {
+    background-color: slateblue;
+}
+
+GtkVBox, GtkHBox {
+    background: darkslategray;
+    color: white;
+}
+
+GtkDrawingArea {
+    background: darkslategray;
+    box-shadow: 5px 5px 5px black;
+    border: 1px solid black;
+    text-shadow: black;
 }
