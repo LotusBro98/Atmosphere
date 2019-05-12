@@ -33,7 +33,7 @@ int Server::loadMovies() {
     sqlite3* db;
     char* errMsg = 0;
 
-    if (sqlite3_open("serverDB.sqlite", &db))
+    if (sqlite3_open("../../src/serverDB.sqlite", &db))
     {
         fprintf(stderr, "Can't open server database: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
@@ -115,7 +115,7 @@ int Server::loadRooms() {
     sqlite3* db;
     char* errMsg = 0;
 
-    if (sqlite3_open("serverDB.sqlite", &db))
+    if (sqlite3_open("../../src/serverDB.sqlite", &db))
     {
         fprintf(stderr, "Can't open server database: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
