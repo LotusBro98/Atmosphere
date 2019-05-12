@@ -71,6 +71,8 @@ void Player::updatePlayState() {
     if (state == 6)
     {
         //libvlc_media_player_stop(media_player);
+        //room->seek(0);
+        //room->pause();
         printf("Konets :)\n");
     }
 
@@ -102,6 +104,12 @@ bool Player::checkWrongState()
 
     if (!room->playing && state != libvlc_Paused)
         return true;
+
+    if (room->playing && state == 6)
+    {
+        room->seek(0);
+        return true;
+    }
 
     return false;
 }
@@ -144,8 +152,9 @@ void Player::pause_player(void) {
 void Player::seek(float progress) {
     printf("%f\n", progress);
 
-    if (progress == -1)
+    if (progress == -1) {
         return;
+    }
 
     libvlc_media_player_set_time(media_player, progress);
     printf("%ld\n", libvlc_media_player_get_time(media_player));
@@ -163,7 +172,7 @@ Player::Player() {
 void Player::start() {
     alive = True;
     int check_cnt = 0;
-    int check_period = 1000;
+    int check_period = 10000;
 
     while (alive) {
         if (!gtk_main_iteration_do(false))
