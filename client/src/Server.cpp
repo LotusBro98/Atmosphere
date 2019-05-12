@@ -108,6 +108,8 @@ void* listenToServer(void* server_ptr) {
 
     free(msg);
 
+    fprintf(stderr, "Lost connection with server. Exiting.\n");
+    exit(1);
     return NULL;
 }
 

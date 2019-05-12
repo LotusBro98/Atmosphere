@@ -49,7 +49,9 @@ void Room::pause() {
     MsgPause msg;
     msg.room = this->id;
 
+    rememberSeek();
     playing = false;
+    printf("Room %d. Paused\n", id);
 
     for (User* user : users)
     {
@@ -61,7 +63,9 @@ void Room::resume() {
     MsgResume msg;
     msg.room = this->id;
 
+    rememberSeek();
     playing = true;
+    printf("Room %d. Resumed\n", id);
 
     for (User* user : users)
     {
@@ -133,8 +137,10 @@ void Room::addUser(User *user) {
 void Room::removeUser(User *user) {
     users.remove(user);
 
+    printf("Room %d, users left: %d\n", this->getId(), users.size());
+
     if (users.size() == 0)
-        pause();
+        this->pause();
 }
 
 bool Room::isPlaying() {
@@ -142,6 +148,8 @@ bool Room::isPlaying() {
 }
 
 void Room::rememberSeek() {
-    lastSeekTime = time_msec();
     lastSeek = askSeek();
+    lastSeekTime = time_msec();
+
+    printf("Remembered last seek: %ld\n", lastSeek);
 }

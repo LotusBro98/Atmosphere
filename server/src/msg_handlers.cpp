@@ -54,10 +54,11 @@ namespace server {
 
     int handleMsgSetRoom(Server *server, User *user, struct MsgSetRoom *msg) {
         Room *room = server->getRoom(msg->room);
-        if (user->getCurrentRoom() != NULL)
+        if (user->getCurrentRoom() != NULL) {
             user->getCurrentRoom()->rememberSeek();
+        }
 
-        room->addUser(user);
+        user->setCurrentRoom(room);
 
         room->sendSource(user);
 
