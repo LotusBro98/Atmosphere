@@ -38,6 +38,11 @@ namespace server {
         void resume();
         void seek(float progress);
 
+        float askSeek();
+        void rememberSeek();
+
+        bool isPlaying();
+
         inline int getId() { return id;}
 
         friend std::ostream &operator<<(std::ostream &os, Room *room);
@@ -50,6 +55,10 @@ namespace server {
         std::list<User *> users;
 
         Movie *currentMovie = NULL;
+
+        time_t lastSeekTime;
+        time_t lastSeek;
+        bool playing;
 
         int id;
     };

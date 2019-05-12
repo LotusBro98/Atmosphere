@@ -123,7 +123,7 @@ void Server::disconnect() {
 }
 
 Room *Server::getCurrentRoom() {
-    return getRoom(1);
+    return currentRoom;
 }
 
 int Server::sendMessage(struct ::Message *msg) {
@@ -171,5 +171,6 @@ void Server::selectRoom(Room* room) {
 
     std::cout << "<- " << &msg;
 
+    currentRoom = room;
     sendMessage((struct Message*) &msg);
 }

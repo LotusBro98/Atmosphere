@@ -35,6 +35,9 @@ public:
     friend void on_stop(GtkWidget *widget, gpointer data);
     friend void on_connect(GtkWidget *widget, gpointer data);
 
+    friend void on_room_pick(GtkWidget *widget, gpointer data);
+
+
     void notifyUpdateSource();
     void notifyUpdatePlayState();
 
@@ -56,21 +59,27 @@ private:
     libvlc_instance_t *vlc_inst;
 
     GtkWidget *window,
-            *playpause_button,
-            *vbox,
-            *menubar,
-            *filemenu,
-            *fileitem,
-            *filemenu_openitem,
-            *player_widget,
-            *hbuttonbox,
-            *stop_button,
-            *connect_button,
 
-            *overlay_main,
+            *main_vbox,
+            *room_hbox,
+
+            *button_hbox,
+            *playpause_button,
+
             *left_revealer,
-            *hbox_main,
-            *list_left;
+            *list_left,
+
+            *right_revealer,
+            *list_right,
+
+            *show_rooms_button,
+            *hide_left_button,
+            *left_box,
+            *playpause_box,
+            *right_box,
+
+
+            *player_widget;
 
     bool alive;
 

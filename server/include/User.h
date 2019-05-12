@@ -27,12 +27,14 @@ namespace server {
         Room* getCurrentRoom();
         void setCurrentRoom(Room* room);
 
+        pthread_t thread;
+
     private:
         friend void* listenerFunc(void* user_p);
 
         int sock_fd;
         struct sockaddr_in addr{};
-        pthread_t thread;
+
         pthread_mutex_t mutex;
 
         Room* currentRoom;

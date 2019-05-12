@@ -21,7 +21,6 @@ namespace server {
         void addMovie(Movie *movie);
 
         void addUser(User *user);
-        void removeUser(User *user);
 
         Room *getRoom(int id);
 
@@ -43,10 +42,14 @@ namespace server {
         std::list<User *>& getUsers();
         std::list<Room *>& getRooms();
 
+        friend bool checkUser(User* user);
+
     private:
         Server();
 
         pthread_t listener_thread;
+
+        void removeUserFromEverywhere(User *user);
 
         libvlc_instance_t *vlc_inst;
 

@@ -3,6 +3,7 @@
 //
 
 #include "msg_handlers.h"
+#include <unistd.h>
 
 namespace server {
 
@@ -42,6 +43,7 @@ namespace server {
         for (Room* room : server->getRooms())
         {
             res->ids[i] = room->getId();
+            i++;
         }
 
         std::cout << "<- " << res;
@@ -52,10 +54,32 @@ namespace server {
 
     int handleMsgSetRoom(Server *server, User *user, struct MsgSetRoom *msg) {
         Room *room = server->getRoom(msg->room);
+        if (user->getCurrentRoom() != NULL)
+            user->getCurrentRoom()->rememberSeek();
 
         room->addUser(user);
 
         room->sendSource(user);
+
+        sleep(1);
+
+        float curSeek = room->askSeek();
+        bool playing = room->isPlaying();
+
+        MsgSeek msg1;
+        msg1.type = MSG_SEEK;
+        msg1.size = sizeof(MsgSeek);
+        msg1.room = room->getId();
+        msg1.percentage = curSeek;
+
+        user->sendMessage((struct Message*) &msg1);
+
+        struct MsgPause msg2;
+        msg2.type = playing ? MSG_RESUME : MSG_PAUSE;
+        msg2.size = sizeof(MsgPause);
+        msg2.room = room->getId();
+
+        user->sendMessage((struct Message*) &msg2);
     }
 
 }

@@ -5,6 +5,7 @@
 #include "../include/Room.h"
 #include <iostream>
 #include <cstring>
+#include <sys/time.h>
 
 using namespace server;
 
@@ -48,6 +49,8 @@ void Room::pause() {
     MsgPause msg;
     msg.room = this->id;
 
+    playing = false;
+
     for (User* user : users)
     {
         user->sendMessage((struct Message*) &msg);
@@ -57,6 +60,8 @@ void Room::pause() {
 void Room::resume() {
     MsgResume msg;
     msg.room = this->id;
+
+    playing = true;
 
     for (User* user : users)
     {
@@ -81,8 +86,18 @@ void Room::sendSource(User *user) {
     free(msg);
 }
 
+time_t time_msec()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
+
 void Room::selectMovie(int index) {
     this->currentMovie = movies.back();
+    lastSeekTime = time_msec();
+    lastSeek = -1;
+    playing = false;
 }
 
 void Room::seek(float progress) {
@@ -90,16 +105,43 @@ void Room::seek(float progress) {
     msg.room = this->id;
     msg.percentage = progress;
 
+    lastSeekTime = time_msec();
+    lastSeek = (int) progress;
+
     for (User* user : users)
     {
         user->sendMessage((struct Message*) &msg);
     }
 }
 
+float Room::askSeek()
+{
+    if (playing)
+    {
+        return time_msec() - lastSeekTime + lastSeek;
+    } else {
+        return lastSeek;
+    }
+}
+
 void Room::addUser(User *user) {
     users.push_back(user);
+
+    //seek(askSeek());
 }
 
 void Room::removeUser(User *user) {
     users.remove(user);
+
+    if (users.size() == 0)
+        pause();
+}
+
+bool Room::isPlaying() {
+    return playing;
+}
+
+void Room::rememberSeek() {
+    lastSeekTime = time_msec();
+    lastSeek = askSeek();
 }

@@ -54,6 +54,8 @@ private:
     pthread_t thread;
 
     std::list<Room*> knownRooms;
+
+    Room* currentRoom;
 };
 
 

@@ -64,10 +64,16 @@ void Server::addUser(User *user) {
     users.push_back(user);
 }
 
-void Server::removeUser(User *user) {
-    users.remove(user);
+void Server::removeUserFromEverywhere(User *user) {
+    //users.remove(user);
     close(user->getSockFD());
+    //printf("Closed %d\n", user->getSockFD());
     errno = 0;
+
+    for (Room* room: rooms)
+    {
+        room->removeUser(user);
+    }
 }
 
 std::list<User *>& Server::getUsers() {

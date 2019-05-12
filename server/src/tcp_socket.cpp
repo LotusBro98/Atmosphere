@@ -5,6 +5,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <cstring>
+#include <signal.h>
+#include <unistd.h>
 #include "../include/Server.h"
 #include "../../include/Message.h"
 #include "msg_handlers.h"
@@ -24,8 +26,10 @@ namespace server {
         server->addUser(user);
 
         while (server->isAlive()) {
-            if (user->recvMessage(msg))
+            if (user->recvMessage(msg)) {
+                errno = 0;
                 break;
+            }
 
             switch (msg->type)
             {
@@ -55,12 +59,36 @@ namespace server {
                     break;
                 default:
                     std::cout << msg;
+                    break;
             }
+            errno = 0;
         }
 
         free(msg);
-    }
 
+        errno = 0;
+
+        return NULL;
+    }
+}
+
+namespace server {
+
+    bool checkUser(User *user) {
+        int rc = pthread_tryjoin_np(user->thread, NULL);
+        //printf("%s (%d) %d\n", strerror(rc), rc, errno);
+        if (rc != EBUSY) {
+            Server::getServer()->removeUserFromEverywhere(user);
+        }
+        return rc != EBUSY;
+    }
+}
+
+void clearUsers(Server* server)
+{
+    errno = 0;
+    server->getUsers().remove_if(checkUser);
+    errno = 0;
 }
 
 int Server::openSocket(short port) {
@@ -85,10 +113,14 @@ int Server::openSocket(short port) {
         return errno;
     }
 
+    signal(SIGPIPE, SIG_IGN);
     __socklen_t addr_len;
     while (isAlive())
     {
+        clearUsers(this);
         int fd = accept(main_sock,(struct sockaddr*) &addr, &addr_len);
+        //printf("Accepted %d\n", fd);
+
         if (errno)
         {
             perror("Failed to accept connection\n");
@@ -97,7 +129,7 @@ int Server::openSocket(short port) {
 
         User* user = new User(fd, &addr);
 
-        pthread_create(&this->listener_thread, NULL, server::listenerFunc, user);
+        pthread_create(&user->thread, NULL, server::listenerFunc, user);
     }
 
     //pthread_join(...);

@@ -18,6 +18,8 @@ int sendMessage(int fd, struct Message* msg)
     char * p = buf;
     int rc;
 
+    //printf("Writing to %d\n", fd);
+
     while ((p < end) && (rc = write(fd, p, end - p)) != 0)
     {
         if (errno) {

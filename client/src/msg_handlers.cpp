@@ -50,5 +50,6 @@ void handleMsgListRooms(Server *server, struct MsgListRooms *msg) {
         server->addRoom(new Room(msg->ids[i], server));
     }
 
-    server->selectRoom(server->getCurrentRoom());
+    if (server->getCurrentRoom() == NULL && n_rooms > 0)
+        server->selectRoom(server->getRoom(msg->ids[0]));
 }

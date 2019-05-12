@@ -31,23 +31,6 @@ void on_playpause(GtkWidget *widget, gpointer data) {
     }
 }
 
-void on_stop(GtkWidget *widget, gpointer data) {
-    Player* player = (Player*) data;
-
-    //player->pause_player();
-    //libvlc_media_player_stop(player->media_player);
-    player->fillRoomsList();
-}
-
-void on_connect(GtkWidget *widget, gpointer data) {
-    Player* player = (Player*) data;
-
-    fprintf(stderr, "Clicked connect\n");
-
-    Room* room = Client::getClient()->getServer()->getRoom(1);
-    room->requestUpdateSource();
-}
-
 void Player::notifyUpdateSource() {
     //lock();
     sourceChanged = true;
@@ -66,10 +49,18 @@ void Player::updateSource()
 {
     char* uri = Client::getClient()->getServer()->getCurrentRoom()->getSource();
     open_media(uri);
+    sourceChanged = false;
 }
 
 void Player::updatePlayState() {
     Room* room = Client::getClient()->getServer()->getCurrentRoom();
+
+    libvlc_state_t state = libvlc_media_player_get_state(media_player);
+    printf("state = %d\n", state);
+    if (state == 1 || state == 0)
+        return;
+
+
 
     bool playing = room->playing;
     float progress = room->progress;
@@ -80,6 +71,7 @@ void Player::updatePlayState() {
         play();
     else
         pause_player();
+    playStateChanged = false;
 }
 
 void Player::open_media(const char* uri) {
@@ -88,7 +80,13 @@ void Player::open_media(const char* uri) {
     libvlc_media_t *media;
     media = libvlc_media_new_location(vlc_inst, uri);
     libvlc_media_player_set_media(media_player, media);
+    //libvlc_media_player_stop(media_player);
+    play();
     libvlc_media_release(media);
+
+
+
+    //pause_player();
 }
 
 void Player::play(void) {
@@ -102,7 +100,10 @@ void Player::pause_player(void) {
 }
 
 void Player::seek(float progress) {
+    printf("%f\n", progress);
+
     libvlc_media_player_set_time(media_player, progress);
+    printf("%ld\n", libvlc_media_player_get_time(media_player));
 }
 
 
@@ -123,12 +124,10 @@ void Player::start() {
         lock();
         if (sourceChanged) {
             updateSource();
-            sourceChanged = false;
         }
 
         if (playStateChanged) {
             updatePlayState();
-            playStateChanged = false;
         }
         unlock();
         usleep(1000);
