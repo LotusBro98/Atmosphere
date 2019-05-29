@@ -3,3 +3,7 @@
 //
 
 #include "Movie.h"
+
+Movie::Movie(int id) {
+    this->id = id;
+}

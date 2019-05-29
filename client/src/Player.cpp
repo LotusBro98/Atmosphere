@@ -57,7 +57,7 @@ void Player::updatePlayState() {
     Room* room = Client::getClient()->getServer()->getCurrentRoom();
 
     libvlc_state_t state = libvlc_media_player_get_state(media_player);
-    printf("state = %d\n", state);
+    //printf("state = %d\n", state);
     if (state == 1 || state == 2)
         return;
     if (state == 5) {

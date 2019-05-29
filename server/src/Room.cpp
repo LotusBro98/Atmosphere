@@ -154,3 +154,7 @@ void Room::rememberSeek() {
 
     printf("Remembered last seek: %ld\n", lastSeek);
 }
+
+std::list<Movie *> Room::getMovies() {
+    return this->movies;
+}

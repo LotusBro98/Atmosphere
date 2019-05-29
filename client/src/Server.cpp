@@ -100,6 +100,10 @@ void* listenToServer(void* server_ptr) {
                 std::cout << "=> " << (struct MsgListRooms*) msg;
                 handleMsgListRooms(server, (struct MsgListRooms*) msg);
                 break;
+            case MSG_LIST_MOVIES:
+                std::cout << "=> " << (struct MsgListMovies*) msg;
+                handleMsgListMovies(server, (struct MsgListMovies*) msg);
+                break;
             default:
                 std::cout << "=> " << msg;
                 break;
@@ -175,4 +179,6 @@ void Server::selectRoom(Room* room) {
 
     currentRoom = room;
     sendMessage((struct Message*) &msg);
+
+    room->requestUpdateMovies();
 }

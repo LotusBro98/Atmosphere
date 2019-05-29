@@ -53,3 +53,16 @@ void handleMsgListRooms(Server *server, struct MsgListRooms *msg) {
     if (server->getCurrentRoom() == NULL && n_rooms > 0)
         server->selectRoom(server->getRoom(msg->ids[0]));
 }
+
+void handleMsgListMovies(Server *server, struct MsgListMovies *msg) {
+    int n_movies = (msg->size - (long)(((struct MsgListRooms*)0)->ids)) / sizeof(int);
+
+    Room* room = server->getRoom(msg->room);
+    room->clearMovies();
+
+    for (int i = 0; i < n_movies; i++) {
+        room->addMovie(new Movie(msg->ids[i]));
+    }
+
+    room->selectMovie(msg->selected);
+}

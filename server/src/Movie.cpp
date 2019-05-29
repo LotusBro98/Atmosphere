@@ -5,15 +5,14 @@
 #include <iostream>
 #include <cstring>
 #include "../include/Movie.h"
+#include "../../client/include/Movie.h"
 
-using namespace server;
-
-Movie::Movie(int id, char* source) {
-    this->source = strdup(source);
-    this->id = id;
-}
 
 namespace server {
+    Movie::Movie(int id, char* source) {
+        this->source = strdup(source);
+        this->id = id;
+    }
 
     std::ostream &operator<<(std::ostream &os, Movie *movie) {
         std::string source(movie->source);
@@ -21,9 +20,9 @@ namespace server {
         return os;
     }
 
-}
+    char* Movie::getSource() {
+        return source;
+    }
 
-char* Movie::getSource() {
-    return source;
 }
 

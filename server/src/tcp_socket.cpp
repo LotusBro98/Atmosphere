@@ -57,6 +57,10 @@ namespace server {
                     std::cout << (struct MsgSetRoom*)msg;
                     handleMsgSetRoom(server, user, (struct MsgSetRoom*)msg);
                     break;
+                case MSG_LIST_MOVIES:
+                    std::cout << (struct MsgListMovies*)msg;
+                    handleMsgListMovies(server, user, (struct MsgListMovies*)msg);
+                    break;
                 default:
                     std::cout << msg;
                     break;

@@ -15,6 +15,16 @@ void on_room_pick(GtkWidget *widget, gpointer data)
     gtk_revealer_set_reveal_child(GTK_REVEALER(Client::getClient()->getPlayer()->left_revealer), false);
 }
 
+void on_movie_pick(GtkWidget *widget, gpointer data)
+{
+    Movie* movie = (Movie*) data;
+
+    Room* room = Client::getClient()->getServer()->getCurrentRoom();
+    room->selectMovie(movie);
+
+    gtk_revealer_set_reveal_child(GTK_REVEALER(Client::getClient()->getPlayer()->right_revealer), false);
+}
+
 void on_show_rooms(GtkWidget *widget, gpointer data)
 {
     Player* player = (Player*) data;
@@ -196,14 +206,14 @@ void Player::fillPlayList() {
     GtkWidget* label0 = gtk_label_new("Плейлист");
     gtk_box_pack_start(GTK_BOX(list_right), label0, FALSE, FALSE, 0);
 
-
-    for (Room* room : Client::getClient()->getServer()->getRooms())
+    Room* room = Client::getClient()->getServer()->getCurrentRoom();
+    for (Movie* movie : room->getMovies())
     {
         GtkWidget* entry = gtk_hbutton_box_new();
         gtk_button_box_set_layout(GTK_BUTTON_BOX(entry), GTK_BUTTONBOX_CENTER);
         gtk_widget_set_size_request(entry, 160, 72);
 
-        std::string text = std::to_string(room->getID());
+        std::string text = std::to_string(movie->getID());
 
         GtkWidget* label = gtk_label_new(text.data());
 
@@ -215,7 +225,7 @@ void Player::fillPlayList() {
 
         gtk_box_pack_start(GTK_BOX(list_right), entry, FALSE, FALSE, 0);
 
-        g_signal_connect(button, "clicked", G_CALLBACK(on_room_pick), room);
+        g_signal_connect(button, "clicked", G_CALLBACK(on_movie_pick), movie);
     }
 
     gtk_revealer_set_reveal_child(GTK_REVEALER(right_revealer), true);

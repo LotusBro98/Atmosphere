@@ -25,8 +25,15 @@ public:
     void requestUpdateSource();
     void requestUpdateMovies();
 
+    void clearMovies();
+    void addMovie(Movie* movie);
+    std::list<Movie*>& getMovies();
+
     void setSource(char* source);
     char* getSource();
+
+    void selectMovie(Movie* movie);
+    void selectMovie(int index);
 
     bool playing;
     float progress;

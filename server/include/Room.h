@@ -49,6 +49,8 @@ namespace server {
 
         void sendSource(User* user);
 
+        std::list<Movie*> getMovies();
+
     private:
 
         std::list<Movie *> movies;

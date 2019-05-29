@@ -16,9 +16,9 @@ Server* Client::getServer() {
 }
 
 void Client::connectToServer() {
-    //server = new Server("127.0.0.1");
+    server = new Server("127.0.0.1");
     //server = new Server("172.20.20.155");
-    server = new Server("192.168.43.115");
+    //server = new Server("192.168.43.115");
     //server = new Server("192.168.43.186");
     server->listenToServerAsync();
 }

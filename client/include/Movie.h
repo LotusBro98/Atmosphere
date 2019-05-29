@@ -12,6 +12,8 @@ class Movie {
 public:
     Movie(int id);
 
+    inline int getID() { return id; }
+
 private:
     int id;
     std::string url;

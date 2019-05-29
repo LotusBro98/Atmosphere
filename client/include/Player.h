@@ -34,6 +34,7 @@ public:
     friend void on_playpause(GtkWidget *widget, gpointer data);
 
     friend void on_room_pick(GtkWidget *widget, gpointer data);
+    friend void on_movie_pick(GtkWidget *widget, gpointer data);
     friend void on_show_rooms(GtkWidget *widget, gpointer data);
     friend void on_show_playlist(GtkWidget *widget, gpointer data);
 

@@ -83,4 +83,27 @@ namespace server {
         user->sendMessage((struct Message*) &msg2);
     }
 
+    int handleMsgListMovies(Server *server, User *user, struct MsgListMovies *msg) {
+        Room* room = server->getRoom(msg->room);
+
+        int n_movies = room->getMovies().size();
+        int size = sizeof(int) * n_movies + (long)(((struct MsgListMovies*)0)->ids);
+
+        struct MsgListMovies* res = (struct MsgListMovies*) malloc(size);
+        res->type = MSG_LIST_MOVIES;
+        res->size = size;
+        res->room = msg->room;
+
+        int i = 0;
+        for (Movie* movie : room->getMovies())
+        {
+            res->ids[i] = movie->getId();
+            i++;
+        }
+
+        std::cout << "<- " << res;
+        user->sendMessage((struct Message*) res);
+
+        free(res);
+    }
 }

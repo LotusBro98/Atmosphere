@@ -22,7 +22,7 @@ namespace server {
 
     int handleMsgSetRoom(Server *server, User *user, struct MsgSetRoom *msg);
 
-    int handleMsgListRooms(Server *server, User *user, struct MsgListRooms *msg);
+    int handleMsgListMovies(Server *server, User *user, struct MsgListMovies *msg);
 
 }
 

@@ -91,5 +91,27 @@ void Room::requestUpdateMovies() {
     free(msg);
 }
 
+void Room::clearMovies() {
+    this->movies.clear();
+}
+
+void Room::addMovie(Movie *movie) {
+    this->movies.push_back(movie);
+}
+
+void Room::selectMovie(int index) {
+    for (Movie* movie : movies)
+        if (index-- == 0)
+            currentMovie = movie;
+}
+
+void Room::selectMovie(Movie* movie) {
+    this->currentMovie = movie;
+}
+
+std::list<Movie *> &Room::getMovies() {
+    return movies;
+}
+
 
 

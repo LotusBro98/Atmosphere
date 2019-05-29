@@ -18,4 +18,6 @@ void handleMsgSeek(Server *server, struct MsgSeek *msg);
 
 void handleMsgListRooms(Server *server, struct MsgListRooms *msg);
 
+void handleMsgListMovies(Server *server, struct MsgListMovies *msg);
+
 #endif //PLAYER_TEST_MSG_HANDLERS_H
